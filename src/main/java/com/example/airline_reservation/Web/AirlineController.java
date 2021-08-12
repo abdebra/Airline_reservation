@@ -2,8 +2,11 @@ package com.example.airline_reservation.Web;
 
 import com.example.airline_reservation.Model.Airline;
 import com.example.airline_reservation.Service.Implementation.AirlineServiceImpl;
+import com.example.airline_reservation.Service.Implementation.AirportServiceImpl;
 import com.example.airline_reservation.Web.DTOs.AirlineDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +19,11 @@ import java.util.Optional;
 public class AirlineController {
 
     AirlineServiceImpl airlineService;
+
+//    @Autowired
+//@ComponentScan("com.company")
+    AirportServiceImpl airportService;
+
 
     @Autowired
     public AirlineController(AirlineServiceImpl airlineServiceImpl){
@@ -70,11 +78,8 @@ public class AirlineController {
     @PostMapping("")
     public ResponseEntity<AirlineDTO> addAirline(@RequestBody AirlineDTO airlineDTO) {
 
-        Optional<Airline> AirOptional = Optional.ofNullable(airlineService.findByCode(airlineDTO.getCode()));
-        if(AirOptional.isPresent()) {
-            throw new IllegalStateException("code taken");
-        }
         AirlineDTO airline = airlineService.save(airlineDTO);
+        System.out.println("saved");
 
         try {
             if (airline != null) {
@@ -124,4 +129,12 @@ public class AirlineController {
             return  new ResponseEntity<>(err,HttpStatus.NOT_FOUND);
     }
 
+    public void getAirpportByCode(String code){
+        airportService.getAirlineByAirportCode( "EA");
+
+    }
+
+    public void AccessAirportByCOde(){
+        airportService.getAirlineByAirportCode("");
+    }
 }

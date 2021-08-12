@@ -1,10 +1,14 @@
 package com.example.airline_reservation.Service.Implementation;
 
 import com.example.airline_reservation.DAO.AirlineRepo;
+import com.example.airline_reservation.DAO.AirportRepo;
 import com.example.airline_reservation.Model.Airline;
+import com.example.airline_reservation.Model.Airport;
 import com.example.airline_reservation.Service.AirlineService;
 import com.example.airline_reservation.Web.DTOs.AirlineDTO;
+import com.example.airline_reservation.Web.DTOs.AirportDTO;
 import com.example.airline_reservation.Web.DTOs.DTOAdapters.AirlineDTOAdapter;
+import com.example.airline_reservation.Web.DTOs.DTOAdapters.AirportDTOAdapter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,10 +23,15 @@ import java.util.Optional;
 @Transactional
 public class AirlineServiceImpl implements AirlineService {
 
+//    @Autowired
+   private AirlineRepo airlineRepo;
+//    @Autowired
+    private AirportRepo airportRepo;
+
     @Autowired
-    AirlineRepo airlineRepo;
-    AirlineServiceImpl(AirlineRepo airlineRepo){
+    AirlineServiceImpl(AirlineRepo airlineRepo,AirportRepo airportRepo){
         this.airlineRepo=airlineRepo;
+        this.airportRepo=airportRepo;
     }
 
     @Override
@@ -85,5 +94,15 @@ public class AirlineServiceImpl implements AirlineService {
         }
         airlineRepo.deleteById(id);
         System.out.println("deleted");
+    }
+
+    @Override
+    public List<AirportDTO> findFlightsFromAirport(String airportCode) {
+        List<AirportDTO> flightDTOList = new ArrayList<>();
+
+        for (Airport airport: airportRepo.findFlightsFromAirport(airportCode)) {
+            flightDTOList.add(AirportDTOAdapter.getAirportDTO(airport));
+        }
+            return flightDTOList;
     }
 }
